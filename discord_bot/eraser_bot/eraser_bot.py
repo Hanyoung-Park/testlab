@@ -78,4 +78,4 @@ async def auto_clear():
 # 봇 실행
 # bot.loop.create_task(auto_clear())
 asyncio.create_task(auto_clear())
-bot.run('MTA4OTQ1MjkyMzU4ODcwNjMyNA.GsMVK3.XtJtDflMOj7WIVvri_yiD5ZSxaJ3Om2P6LmS_M')
+bot.run('TOKEN')
