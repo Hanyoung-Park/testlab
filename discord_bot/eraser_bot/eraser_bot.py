@@ -77,5 +77,11 @@ async def auto_clear():
 
 # 봇 실행
 # bot.loop.create_task(auto_clear())
-asyncio.create_task(auto_clear())
-bot.run('TOKEN')
+# asyncio.create_task(auto_clear())
+# bot.run('TOKEN')
+
+if __name__ == '__main__':
+    # 이벤트 루프를 먼저 실행합니다
+    loop = asyncio.get_event_loop()
+    loop.create_task(auto_clear())
+    bot.run(TOKEN)
