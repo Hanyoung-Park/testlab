@@ -3,7 +3,11 @@ from discord.ext import commands
 import asyncio
 import datetime
 
-bot = commands.Bot(command_prefix='.')
+# 인텐트 지정
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix='.', intents=intents)
 
 # 봇이 준비되었을 때 출력되는 메시지
 @bot.event
@@ -58,16 +62,20 @@ async def clearall(ctx):
 
 # 1시간마다 채팅방에서 자동으로 메시지 삭제
 async def auto_clear():
-    while True:
-        await asyncio.sleep(3600)
-        now = datetime.datetime.now()
-        async for message in channel.history(limit=None, after=now-datetime.timedelta(hours=1)):
-            if message.author == bot.user:
-                continue
-            time_difference = now - message.created_at
-            if time_difference.total_seconds() >= 3600:
-                await message.delete()
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        await asyncio.sleep(3600) # 1시간마다
+        for channel_id in channels:
+            channel = bot.get_channel(channel_id)
+            if channel:
+                # 채널에서 1시간 이상 지난 메시지들을 가져옵니다
+                messages = await channel.history(after=datetime.utcnow()-timedelta(hours=1)).flatten()
+                for message in messages:
+                    if message.author == bot.user: # 봇이 보낸 메시지만 삭제합니다
+                        await message.delete()
+
 
 # 봇 실행
-bot.loop.create_task(auto_clear())
-bot.run('TOKEN')
+# bot.loop.create_task(auto_clear())
+asyncio.create_task(auto_clear())
+bot.run('MTA4OTQ1MjkyMzU4ODcwNjMyNA.GsMVK3.XtJtDflMOj7WIVvri_yiD5ZSxaJ3Om2P6LmS_M')
